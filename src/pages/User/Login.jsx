@@ -7,17 +7,48 @@ import { useGlobalContext } from "../../Hooks/useGlobalContext";
 import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
-// import "../../styles/Admin Styles/AdminSignupForm.css";
-// import search from "../../assets/images/search.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
-  const { isDark } = useGlobalContext();
-  const [show, setShow] = useState(true);
+  const redirect = useNavigate();
+  const { isDark, BASE_URL } = useGlobalContext();
+  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   const togglePassword = (e) => {
     e.preventDefault();
     setShow(!show);
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setClicked(true)
+    try {
+      //post /login
+      const {data} = await axios.post(`${BASE_URL}/login`, {email, password})
+      if (data.success) {
+        setClicked(false)
+        //redirect to inspection
+        redirect("/inspection")
+        toast.success("Login successfully")
+        //handle token - localStorage
+        localStorage.setItem("token", data.token);
+      }
+    } catch (error) {
+      console.log(error);
+      setClicked(false)
+      //toast error
+      toast.error(error.response?.data?.err);
+      setEmail("");
+      setPassword("");
+    }
+  }
   return (
     <div className={isDark ? "DarkMode" : null}>
       <div className=" vh-100 overflow-y-hidden d-flex justify-content-center w-100">
@@ -27,7 +58,7 @@ const Login = () => {
               <p className="text fw-bold fs-4">Welcome Back to Betahouse</p>
               <p>Enter your details to access your account</p>
             </div>
-            <form className="inputs ">
+            <form className="inputs " onSubmit={handleLogin}>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label fs-6">
                   Email
@@ -37,6 +68,8 @@ const Login = () => {
                   className="form-control active shadow-none"
                   placeholder="abc@gmail.com"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -53,6 +86,8 @@ const Login = () => {
                   className="form-control shadow-none "
                   id="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   className="border-none border-0 outline-none bg-transparent position-absolute top-50"
@@ -76,10 +111,10 @@ const Login = () => {
               </div>
 
               <button
-                type="button"
+                type="submit"
                 className="btn btn-success text-center w-100 btn-lg"
               >
-                Sign in
+                {clicked ? 'Signing in...' : "Sign in"}
               </button>
             </form>
 

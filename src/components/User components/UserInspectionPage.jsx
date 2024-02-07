@@ -3,10 +3,67 @@ import { MdEmail, MdAccessTimeFilled, MdTextsms } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { SlCalender } from "react-icons/sl";
 import { useState } from "react";
+import axios from "axios";
+import {
+  useGlobalContext
+} from "../../Hooks/useGlobalContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Inspection = () => {
+  const { BASE_URL } = useGlobalContext();
+  const [inspection, setInspection] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    location: "",
+    inspectionDate: "",
+    inspectionTime: "",
+    message: "",
+  });
+  const [clicked, setClicked] = useState(false);
+  const handleChange = (e) => {
+    setInspection({ ...inspection, [e.target.name]: e.target.value });
+  };
+  const token = localStorage.getItem("token");
+
+  const handleInspectionSubmit = async (e) => {
+    e.preventDefault();
+    //send a post
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/inspection`,
+        { ...inspection },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        toast.success("INSPECTION SUBMITTED");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.err);
+      setClicked(false);
+      setInspection({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        location: "",
+        inspectionDate: "",
+        inspectionTime: "",
+        message: "",
+      });
+    }
+  };
+
   return (
     <div>
+      <ToastContainer />
       <div className="container py-4 ">
         <div className="text-center">
           <h3>BOOK AN INSPECTION WITH US</h3>
@@ -16,7 +73,7 @@ const Inspection = () => {
         </div>
 
         <div className="container py-3 ">
-          <form>
+          <form onSubmit={handleInspectionSubmit}>
             <div className="d-block d-md-flex gap-2">
               <div className=" border position-relative  rounded-3 border-dark d-flex gap-1  justify-content-center align-items-center w-100   shadow shadow-sm">
                 <FaUser className="text-success fs-5 position-absolute start-0 ms-2  " />
@@ -24,6 +81,10 @@ const Inspection = () => {
                   type="text"
                   className="border-0 px-5 py-3  shadow-none form-control h-100"
                   placeholder="First Name"
+                  required
+                  name="firstName"
+                  value={inspection.firstName}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -37,6 +98,10 @@ const Inspection = () => {
                   type="text"
                   className="border-0 px-5 py-3 shadow-none form-control h-100 "
                   placeholder="Last Name"
+                  required
+                  name="lastName"
+                  value={inspection.lastName}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -50,6 +115,10 @@ const Inspection = () => {
                   type="email"
                   className="border-0 px-5 py-3 shadow-none form-control h-100 "
                   placeholder="Email-address"
+                  required
+                  name="email"
+                  value={inspection.email}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -64,6 +133,10 @@ const Inspection = () => {
                   type="tel"
                   className="border-0 px-5 py-3 shadow-none form-control h-100"
                   placeholder="Phone Number"
+                  required
+                  name="phoneNumber"
+                  value={inspection.phoneNumber}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -77,6 +150,10 @@ const Inspection = () => {
                   type="text"
                   className="border-0 px-5 py-3 shadow-none form-control h-100"
                   placeholder="Location"
+                  required
+                  name="location"
+                  value={inspection.location}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -89,6 +166,10 @@ const Inspection = () => {
                 <input
                   type="Date"
                   className="border-0 px-5 py-3 shadow-none form-control h-100"
+                  required
+                  name="inspectionDate"
+                  value={inspection.inspectionDate}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -101,6 +182,10 @@ const Inspection = () => {
                 <input
                   type="time"
                   className="border-0 px-5 py-3 shadow-none form-control h-100"
+                  required
+                  name="inspectionTime"
+                  value={inspection.inspectionTime}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -126,7 +211,7 @@ const Inspection = () => {
                 className="btn rounded-3 text-white fs-6 py-2 my-3 w-50"
                 style={{ backgroundColor: "#3D9970" }}
               >
-                SUBMIT
+                {clicked ? "SUBMITTING..." : "SUBMIT"}
               </button>
             </div>
           </form>

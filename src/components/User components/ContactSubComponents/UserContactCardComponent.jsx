@@ -78,7 +78,7 @@ const UserContactCardComponent = () => {
               get back to you promptly
             </p>
           </div>
-          <form className="user-contactform">
+          <form  action="https://formspree.io/f/mleqjpzo" method="POST" className="user-contactform">
             <div className="user-contactpair col-12">
               <div className="col-lg-6">
                 <label className="form-label ">Name</label>
@@ -87,6 +87,7 @@ const UserContactCardComponent = () => {
                   rows="3"
                   className="form-control shadow-none focus-ring-success user-forminput"
                   required
+                  name="fullname"
                 />
               </div>
               <div className="col-lg-6 ">
@@ -96,6 +97,7 @@ const UserContactCardComponent = () => {
                   rows="3"
                   className="form-control shadow-none user-forminput"
                   required
+                  name="phoneNumber"
                 />
               </div>
             </div>
@@ -108,6 +110,7 @@ const UserContactCardComponent = () => {
               rows="3"
               className="form-control shadow-none user-formtxtarea"
               required
+              name="message"
             ></textarea>
 
             <button className="user-contactbtn w-100 btn bg-success fw-bold text-white my-2 ">

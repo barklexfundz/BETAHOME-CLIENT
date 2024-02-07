@@ -5,6 +5,7 @@ import UserPropertyDiscover from "../../components/User components/PropertiesSub
 import UserFooter from "../../components/User components/UserFooter";
 import { useGlobalContext } from "../../Hooks/useGlobalContext";
 import { useEffect } from "react";
+import UserDiscover from "../../components/User components/HomeSubComponents/UserDiscover";
 
 const Properties = () => {
   const { isDark } = useGlobalContext();
@@ -19,7 +20,7 @@ const Properties = () => {
       <UserNavbar />
       <UserPropertyHeroSection />
       <UserPropertyCardComponent />
-      <UserPropertyDiscover />
+      <UserDiscover />
       <UserFooter />
     </div>
   );

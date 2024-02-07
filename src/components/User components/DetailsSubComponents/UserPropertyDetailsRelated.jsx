@@ -9,7 +9,7 @@ import { BsCameraVideoFill } from "react-icons/bs";
 import { GrLink } from "react-icons/gr";
 import { IoImageSharp } from "react-icons/io5";
 
-const UserPropertyDetailsRelated = () => {
+const UserPropertyDetailsRelated = ({similar}) => {
   const { properties } = useGlobalContext();
 
   const RelatedProperties = properties.slice(0, 3);
@@ -19,25 +19,26 @@ const UserPropertyDetailsRelated = () => {
       <h2 className="ms-xxl-5 text-lg-start  text-center ">Related Properties</h2>
 
       <div className="UserPropertyRelatedCard d-flex flex-wrap justify-content-center w-100 align-items-center gap-3">
-        {RelatedProperties.map((relprop) => {
+        {similar.map((relprop) => {
           const {
-            image,
+            media: {images},
             _id,
             title,
-            featured,
             location,
+            propertyStatus,
             price,
-            features: { bedroom, bathroom },
+            bedroom,
+            bathroom,
           } = relprop;
 
           return (
-            <div key={_id} className="w-auto border rounded ">
+            <div key={_id} className=" UserPropertyRelated border rounded ">
               <Link to= {`/properties/${_id}`}>
               <div className="position-relative">
               <div className="UserfeaturedBtn w-100 p-3 d-flex justify-content-between position-absolute ">
                 <button
                   className={
-                    featured
+                    true
                       ? "btn bg-success text-white"
                       : " btn bg-secondary text-white "
                   }
@@ -46,7 +47,7 @@ const UserPropertyDetailsRelated = () => {
                 </button>
                 <button
                   className={
-                    !featured
+                    propertyStatus === 'available'
                       ? " btn bg-success text-white"
                       : "btn bg-secondary text-white "
                   }
@@ -54,7 +55,7 @@ const UserPropertyDetailsRelated = () => {
                   For Sale
                 </button>
               </div>
-                <img src={image} alt="" className="w-100" />
+                <img src={images[0]} alt="" className="w-100" />
                 <div className="UserPropDetBottom d-flex gap-3 text-white position-absolute ">
                   <GrLink className="p-2 rounded bg-secondary fs-2" />
                   <BsCameraVideoFill className="p-2 rounded bg-secondary fs-2" />

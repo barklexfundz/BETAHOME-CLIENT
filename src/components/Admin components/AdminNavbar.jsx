@@ -4,15 +4,36 @@ import { IoSearch } from "react-icons/io5";
 import { HiOutlineBell } from "react-icons/hi";
 import { TiThMenu } from "react-icons/ti";
 import "../../styles/Admin Styles/AdminNavbar.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAdminContext } from "../../adminContext";
+import { useState } from "react";
 
 const AdminNavbar = () => {
+  const area = useLocation()
+  const redirect = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    //redirect /admin/login
+    redirect('/admin/login')
+  }
+
+  const {setLocation} = useAdminContext()
+  const [search, setSearch] = useState('')
+  const handleSearch = (e)=> {
+    e.preventDefault()
+    setLocation(search)
+  }
+
   return (
     <div className="py-3 pe-2  pe-lg-5">
       <header className="AdminNavbarContainer d-flex justify-content-between align-items-center">
         <div className="AdminNavRight d-flex gap-5">
-          <div className="headerSearchWrapper d-flex align-items-center">
-            <input type="text" placeholder="Search Here" />
+          <div>
+            { area.pathname === '/admin/properties' ? <form onSubmit = {handleSearch} className="headerSearchWrapper d-flex align-items-center">
+            <input type="text" placeholder="Search Here" value={search} onChange={(e) => setSearch(e.target.value)}/>
             <IoSearch className="headerSearchIcon" />
+            </form> : <h1 className="text-success display-6">Welcome</h1>}
+            
           </div>
         </div>
 
@@ -27,7 +48,7 @@ const AdminNavbar = () => {
               <p className="fw-light ">Admin</p>
             </div>
 
-            <img src={AdminPic} alt="adminpic" />
+            <button onClick={handleLogout} className="btn btn-danger">Log Out</button>
           </div>
         </div>
       </header>

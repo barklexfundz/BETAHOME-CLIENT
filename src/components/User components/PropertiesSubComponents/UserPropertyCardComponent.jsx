@@ -12,10 +12,20 @@ import { GrLink } from "react-icons/gr";
 import { IoMdVideocam } from "react-icons/io";
 import { AiFillPicture } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import Loading from "../../Loading";
+import { formatPrice } from "../../../utils/helpers";
 
 const UserPropertyCardComponent = () => {
   const [propertyList, setpropertyList] = useState(null);
-  const { properties } = useGlobalContext();
+  const { properties, isLoading } = useGlobalContext();
+  console.log(properties);
+
+  if (isLoading) {
+    return <Loading />
+  }
+  if (!isLoading && properties.length < 1) {
+    return <h1 className="text-success display-5 text-center">No Properties Meet your Search</h1>
+  }
 
   return (
     <div>
@@ -24,11 +34,11 @@ const UserPropertyCardComponent = () => {
       <div className="UserPropertiesFilter container ">
         <div className="UserPropertiesFilter1">
           <p className="UserPropertiesFilter-p">
-            <LuSettings2 className="lg-4 " /> More Filter
+            <LuSettings2 className="lg-4 " />  Filter
           </p>
           <p className="UserPropertiesFilter-p ps-2">
             {" "}
-            Showing 1 – 10 of 15 results
+            Showing 1 – 9 of 15 {properties.length} results
           </p>
         </div>
         <div className="UserPropertiesFilter2 d-flex align-items-center justify-content-center ">
@@ -47,11 +57,12 @@ const UserPropertyCardComponent = () => {
         {properties.map((property) => {
           const {
             _id,
-            image,
+            media: {images},
             title,
             price,
             location,
-            features: { bedroom, bathroom },
+             bedroom, 
+             bathroom,
           } = property;
 
           return (
@@ -62,7 +73,7 @@ const UserPropertyCardComponent = () => {
 
                   <div className="forSale">For sale</div>
                   <div className="properties-image">
-                    <img src={image} alt="Properties Image" />
+                    <img src={images[0]} alt="Properties Image" />
                     <div className="inner-icons">
                       <GrLink className="icon" />
 
@@ -96,7 +107,7 @@ const UserPropertyCardComponent = () => {
 
                     <div className="price-icon">
                       <div className="price">
-                        <span>{price}</span>
+                        <span>{formatPrice(price)}</span>
                       </div>
 
                       <div className="share-like-icons">
@@ -114,7 +125,7 @@ const UserPropertyCardComponent = () => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <a href="#">&lt;</a>
         <a className="active" href="#">
           1
@@ -123,7 +134,7 @@ const UserPropertyCardComponent = () => {
         <a>3</a>
         <a>4</a>
         <a>&gt;</a>
-      </div>
+      </div> */}
     </div>
   );
 };

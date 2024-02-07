@@ -1,7 +1,8 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { properties } from "./mockData/properties";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import axios from "axios";
 
 export const AppContext = createContext();
 
@@ -30,11 +31,33 @@ const AppProvider = ({ children }) => {
     setBedroomCount(bedroomCount + 1);
   };
 
-  const decrementBedroom = () => {
+  const decrementBedroom = () => { 
     if (bedroomCount > 0) {
       setBedroomCount(bedroomCount - 1);
     }
   };
+
+  const BASE_URL = "https://betabarklex.onrender.com/api/v1";
+  const [location, setLocation] = useState('')
+  const [type, setType] = useState('')
+  const [bed, setBed] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [properties, setProperties] = useState([])
+  const url = `${BASE_URL}/property?locatin=${location}&type=${type}&bedroom=${bed}`
+  const getProperties = async () => {
+    setIsLoading(true)
+    try {
+      const {data} = await axios(url)
+      setProperties(data.properties)
+      setIsLoading(false)
+      // setBed("");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=> {
+    getProperties()
+  }, [type, location,bed])
 
   return (
     <AppContext.Provider
@@ -46,6 +69,13 @@ const AppProvider = ({ children }) => {
         isDark,
         setIsDark,
         setLightMode,
+        BASE_URL, 
+        location, 
+        type,
+        isLoading,
+        setLocation,
+        setType,
+        setBed
       }}
     >
       {children}

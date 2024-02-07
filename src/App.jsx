@@ -18,6 +18,8 @@ import AdminPropertyDetails from "./pages/Admin/AdminPropertyDetails";
 import AdminPropertyEdit from "./pages/Admin/AdminPropertyEdit";
 import SignupForm from "./pages/Admin/AdminSignupForm";
 import SigninForm from "./pages/Admin/AdminSigninForm";
+import Private from "./components/Private";
+import AdminPrivate from "./components/AdminPrivate";
 
 function App() {
   return (
@@ -35,7 +37,11 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/inspection" element={<Inspection />} />
+            //Private
+            <Route element={<Private />}>
+              <Route path="/inspection" element={<Inspection />} />
+            </Route>
+            
 
             {/* Admin Routes */}
             <Route path="/admin" element={<SigninForm />} />
@@ -44,6 +50,7 @@ function App() {
             <Route path="/admin/signup" element={<SignupForm />} />
 
             {/* ADMIN DASHBOARD ROUTES */}
+            <Route element= {<AdminPrivate />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/add" element={<AddNewProperties />} />
 
@@ -57,6 +64,7 @@ function App() {
               path="/admin/properties/:propertyId"
               element={<AdminPropertyDetails />}
             />
+            </Route>
             {/* Error Route */}
             <Route path="*" element={<ErrorPage />} />
           </Routes>

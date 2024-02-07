@@ -6,22 +6,57 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../../Hooks/useGlobalContext";
 
 const SigninForm = () => {
+  const redirect = useNavigate();
+  const {BASE_URL} = useGlobalContext();
   const [show, setShow] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [clicked, setClicked] = useState(false)
 
   const togglePassword = (e) => {
     e.preventDefault();
     setShow(!show);
   };
+
+  const handleSignin = async (e) => {
+    e.preventDefault();
+    setClicked(true)
+    try {
+      //post /login
+      const {data} = await axios.post(`${BASE_URL}/login`, {email, password})
+      if (data.success) {
+        setClicked(false)
+        localStorage.setItem('token', data.token)
+        //redirect to dashboard
+        redirect("/admin/dashboard")
+        toast.success("Login successfully")
+        
+      }
+    } catch (error) {
+      console.log(error);
+      setClicked(false)
+      //toast error
+      toast.error(error.response?.data?.err);
+      setEmail("");
+      setPassword("");
+    }
+  }
   return (
     <div className="d-flex justify-content-center vh-100 w-100">
+      <ToastContainer />
       <div className="input-field bg-light p-3 p-md-5 col-md-6 col-12 ">
         <div className="header lh-1 mb-4 text-center text-md-start">
           <p className="text fw-bold fs-4">Sign in to your admin account.</p>
           <p className=" fs-6">Enter your details to access your account</p>
         </div>
-        <form className="inputs ">
+        <form className="inputs " onSubmit={handleSignin}>
           <div className="mb-3">
             <label htmlFor="email1" className="form-label fs-6">
               Email
@@ -31,6 +66,9 @@ const SigninForm = () => {
               className="form-control"
               placeholder="johndoe@gmail.com"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -45,6 +83,9 @@ const SigninForm = () => {
               className="form-control shadow-none "
               id="password"
               placeholder=""
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <button
               className="border-none border-0 outline-none bg-transparent position-absolute top-50"
@@ -63,15 +104,15 @@ const SigninForm = () => {
               id="flexCheckDefault"
             />
             <label className="form-check-label " htmlFor="flexCheckDefault">
-              Remember me
+              Remember me 
             </label>
           </div>
 
           <button
-            type="button"
+            type="submit"
             className="btn btn-success text-center w-100 btn-lg"
           >
-            Sign in
+            {clicked ? "Signing in..." : "Sign in"}
           </button>
         </form>
 

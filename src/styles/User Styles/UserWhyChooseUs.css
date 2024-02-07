@@ -13,8 +13,14 @@
     background-size: cover;
     height: 50vh;
     position: relative ;
-    z-index: -2;
+    /* z-index: -2; */
 }
+
+.DarkMode .whyChoose-textIcon{
+    background-color: black;
+    color: white;
+}
+
 .whyChoose-cover> h1{
     font-family: "Exo 2," sans-serif;
     color: #ffff;

@@ -11,12 +11,20 @@ import { useState } from "react";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { BiMoon } from "react-icons/bi";
 import { useGlobalContext } from "../../Hooks/useGlobalContext";
+import { useNavigate } from "react-router-dom";
 
 const UserNavbar = () => {
+  const redirect = useNavigate();
   const [sidebar, setSidebar] = useState(false);
   const { propertyId } = useParams();
   const location = useLocation();
   const { isDark, setLightMode } = useGlobalContext();
+  const token = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    redirect("/");
+  };
 
   return (
     <div
@@ -99,7 +107,14 @@ const UserNavbar = () => {
               </Link>
             </li>
           </ul>
-          <div className="d-flex flex-column ms-xxl-5  flex-lg-row  gap-3 align-items-center mt-sm-3 ">
+          {
+           token ? (
+           <div> 
+            {" "}
+            <button onSubmit={handleLogout} className="btn btn-danger">Log Out</button> {" "}
+            </div>) :
+
+            <div className="d-flex flex-column ms-xxl-5  flex-lg-row  gap-3 align-items-center mt-sm-3 ">
             <Link to="/signup">
               <button
                 className={
@@ -125,6 +140,7 @@ const UserNavbar = () => {
               </button>
             </Link>
           </div>
+          }
           {/* </Navbar.Collapse> */}
           {/* </Container> */}
         </nav>
