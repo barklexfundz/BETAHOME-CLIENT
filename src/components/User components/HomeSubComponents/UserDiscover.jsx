@@ -118,10 +118,10 @@ const UserDiscover = () => {
   return (
     <section className='userdiscover-cover mt-5 '>
         <h1 className='text-center discoverH1' >Discover Our Popular Properties</h1>
+        {/* <CustomPrevArrow/> */}
             <Slider {...settings} className=' mt-5 '>
-            <CustomPrevArrow/>
             {discover.map((dis)=>{
-                const {_id, media:{images}, title, location, price, bedroom, bathrooms, squareFeet} = dis ;
+                const {_id, media:{images}, title, location, price, bedroom, bathroom, squarefeet} = dis ;
                 return<div className="cards"  key={_id}>
                          
                          <img src={images[0]} alt={title} /> 
@@ -131,9 +131,9 @@ const UserDiscover = () => {
                              <div className="features">
                                 <p>{bedroom} Bed</p>
                                 <div className='userdiscover-line'></div>
-                                <p>{bathrooms} Bath</p>
+                                <p>{bathroom} Bath</p>
                                 <div className='userdiscover-line'></div>
-                                <p>{squareFeet} sq ft</p>
+                                <p>{squarefeet} sq ft</p>
                              </div>
                              <div className="location">
                              <MdLocationOn size={22} />
@@ -143,8 +143,9 @@ const UserDiscover = () => {
                          
                       </div>
             })}
-            <CustomNextArrow/>
             </Slider>
+            {/* <CustomNextArrow/> */}
+            
     </section>
   )
 }
